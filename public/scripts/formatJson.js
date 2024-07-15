@@ -1,10 +1,12 @@
 /**
- {
-		"name":"Count Characters",
-		"description":"Count the number of characters.",
-	}
+{
+   "id":"3",
+   "tag":"JsonFormat",
+   "name":"Format JSON",
+   "description":"转换文本的json内容",
+}
  **/
 
-export const main = (state) => {
+const main = (state) => {
     return JSON.stringify(JSON.parse(state), null, 2)
 }

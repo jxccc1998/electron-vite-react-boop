@@ -5,17 +5,94 @@ import ace from "ace-builds/src-noconflict/ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import 'ace-builds/src-noconflict/theme-monokai';
 import Header, {messageType} from "@/components/header";
-import {useKeyPress} from "ahooks";
+import {useKeyPress, useUpdateEffect} from "ahooks";
+import {
+    CHANGE_DIRECTORY,
+    GET_CUSTOMIZE_DIR,
+    GET_CUSTOMIZE_SCRIPT_FILES,
+    GET_SCRIPT_CONTENT,
+    GET_SCRIPT_FILES
+} from "../constant/event";
+
+export type funcItemType = {
+    type: 'base' | 'customize',
+    name: string,
+    description: string,
+    tag: string;
+    id: number;
+}
+
+const extractMultiLineComments = (content: string) => {
+    // const commentsRegex = /\/\**([\s\S]*?)\**\//g;
+    const commentsRegex = /\/\*\*([\s\S]*?)\**\//g;
+    let match = null;
+    const comments = [];
+
+    while ((match = commentsRegex.exec(content))) {
+        comments.push(match[1].trim());
+    }
+    // return comments[0]
+    return eval("("+ comments[0] + ")")
+}
 
 let editor: any
 function App() {
-    const [files, setFiles ] = useState<string[]>([])
+    const [files, setFiles ] = useState<funcItemType[]>([])
     const [open, setOpen] = useState<boolean>(false)
+    const [isUpdate, setIsUpdate] = useState<boolean>(false)
     const [message, setMessage] = useState<messageType>({
         type: 'INFO', content: '按下ctrl+x搜索并使用功能'
     })
 
+    const loadScripts = async () => {
+        const scriptFiles: string[] = await window.ipcRenderer.invoke(GET_SCRIPT_FILES);
+        const res = window.ipcRenderer.sendSync(GET_CUSTOMIZE_DIR)
+        let customizeScriptFiles: string[] = []
+        if(res) {
+            customizeScriptFiles = await window.ipcRenderer.invoke(GET_CUSTOMIZE_SCRIPT_FILES, res);
+        }
+        const scriptFilePromises = scriptFiles.map(async (fileName) => {
+            const scriptFileContent = await window.ipcRenderer.invoke(GET_SCRIPT_CONTENT, {
+                name: fileName,
+                type: 'base'
+            });
+            if (scriptFileContent) {
+                const annotate = extractMultiLineComments(scriptFileContent);
+                if (annotate && annotate.name && annotate.description) {
+                    annotate.type = 'base'
+                    return annotate;
+                }
+            }
+            return null;
+        });
+
+        const customizeScriptFilePromises = customizeScriptFiles.map(async (fileName) => {
+            const scriptFileContent = await window.ipcRenderer.invoke(GET_SCRIPT_CONTENT, {
+                name: fileName,
+                type: 'customize'
+            });
+            if (scriptFileContent) {
+                const annotate = extractMultiLineComments(scriptFileContent);
+                if (annotate && annotate.name && annotate.description) {
+                    annotate.type = 'customize'
+                    return annotate;
+                }
+            }
+            return null;
+        });
+
+        const annotates = await Promise.all(scriptFilePromises.concat(customizeScriptFilePromises));
+        setFiles(annotates)
+    }
+
+    useUpdateEffect(() => {
+        loadScripts()
+    }, [isUpdate])
+
     useEffect(() => {
+        window.ipcRenderer.on(CHANGE_DIRECTORY, (e, dir) => {
+            setIsUpdate(val => !val)
+        });
         editor = ace.edit("editor")
         editor.setFontSize(20)
         editor.setOption("wrap", "free")
@@ -27,11 +104,6 @@ function App() {
     useKeyPress(['ctrl.x'], () => {
         setOpen(true);
     });
-
-    const loadScripts = async () => {
-        const scriptFiles: string[] = await window.ipcRenderer.invoke('get-script-files');
-        setFiles(scriptFiles);
-    }
 
     const close = () => {
         setOpen(false);

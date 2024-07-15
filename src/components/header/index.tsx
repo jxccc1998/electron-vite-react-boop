@@ -6,13 +6,13 @@ export type messageType = {
 }
 
 const MenuBar = (props: { message: messageType }) => {
-    const { message  } = props;
+    const { message  } = props
 
     return (
         <div className="menu-bar">
-            <div className="message">
-                <span className={message.type.toLowerCase()}>{ message.content }</span>
-            </div>
+                <div className="message">
+                    <span className={message.type.toLowerCase()}>{message.content}</span>
+                </div>
         </div>
     );
 };

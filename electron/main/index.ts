@@ -1,10 +1,21 @@
-import electron, { app, BrowserWindow, shell, ipcMain } from 'electron'
-import { createRequire } from 'node:module'
-import { fileURLToPath } from 'node:url'
+import {app, BrowserWindow, dialog, ipcMain, shell} from 'electron'
+import {createRequire} from 'node:module'
+import {fileURLToPath} from 'node:url'
 import path from 'node:path'
 import os from 'node:os'
-import { update } from './update'
+import {update} from './update'
 import fs from "fs";
+import {
+  CHANGE_DIRECTORY,
+  GET_CUSTOMIZE_DIR,
+  GET_CUSTOMIZE_SCRIPT_FILES,
+  GET_SCRIPT_CONTENT,
+  GET_SCRIPT_FILES,
+  SET_CUSTOMIZE_DIR,
+  SETUP_DIRECTORY
+} from "../../constant/event";
+import {getCustomizeDir, setCustomizeDir} from "./store";
+import {CUSTOMIZE_SCRIPTS_DIR} from "../../constant/config";
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -48,6 +59,13 @@ async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
     icon: path.join(process.env.VITE_PUBLIC, 'favicon.ico'),
+    minWidth: 600,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      color: 'rgba(0,0,0,0)',
+      height: 50,
+      symbolColor: 'white'
+    },
     webPreferences: {
       preload,
       nodeIntegration: true,
@@ -117,13 +135,46 @@ ipcMain.handle('open-win', (_, arg) => {
   }
 })
 
-ipcMain.handle('get-script-files', async () => {
+ipcMain.handle(GET_SCRIPT_FILES, async () => {
   const scriptsPath = path.join(process.env.VITE_PUBLIC, 'scripts');
   const scriptFiles = fs.readdirSync(scriptsPath).filter(v => v.endsWith('.js'));
   return scriptFiles.map(v => v.replace('.js', ''));
 });
 
-ipcMain.handle('get-script-file', async (event, args) => {
-  const scriptsPath = path.join(process.env.VITE_PUBLIC, 'scripts');
-  return path.join(scriptsPath, args.name + '.js')
+ipcMain.handle(GET_CUSTOMIZE_SCRIPT_FILES, async (event, args) => {
+  const scriptFiles = fs.readdirSync(args).filter(v => v.endsWith('.js'));
+  return scriptFiles.map(v => v.replace('.js', ''));
+});
+
+ipcMain.handle(GET_SCRIPT_CONTENT, async (event, args: { type: 'customize' | 'base', name: string }) => {
+  let scriptsPath: string = ''
+  if(args.type === 'customize') {
+    scriptsPath = getCustomizeDir(CUSTOMIZE_SCRIPTS_DIR) as string
+  } else {
+    scriptsPath = path.join(process.env.VITE_PUBLIC, 'scripts')
+  }
+  return fs.readFileSync(path.join(scriptsPath, args.name + '.js'), "utf8")
+});
+
+ipcMain.on(SETUP_DIRECTORY, async (event) => {
+  const dir = dialog.showOpenDialogSync({
+    properties: ['openDirectory'],
+  });
+  if (dir) {
+    setCustomizeDir(CUSTOMIZE_SCRIPTS_DIR, dir[0]);
+    event.sender.send(CHANGE_DIRECTORY, dir[0]);
+  }
+})
+
+ipcMain.on(SET_CUSTOMIZE_DIR, async (event, key, val) => {
+  setCustomizeDir(key, val);
+  event.returnValue = true;
+});
+
+ipcMain.on(GET_CUSTOMIZE_DIR, async (event, val) => {
+  if(CUSTOMIZE_SCRIPTS_DIR) {
+    event.returnValue = getCustomizeDir(CUSTOMIZE_SCRIPTS_DIR);
+  } else {
+    event.returnValue = void 0;
+  }
 });

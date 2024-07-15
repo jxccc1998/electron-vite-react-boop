@@ -20,8 +20,10 @@
   "dependencies": {
     "ace-builds": "^1.35.2",
     "ahooks": "^3.8.0",
+    "electron-store": "^8.1.0",
     "electron-updater": "^6.1.8",
-    "less": "^4.2.0"
+    "less": "^4.2.0",
+    "rsuite": "^5.66.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.42.1",

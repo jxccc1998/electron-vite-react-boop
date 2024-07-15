@@ -3,28 +3,40 @@
     justify-content: center;
     align-items: center;
     height: 50px;
-    padding: 10px 0;
+    padding: 10px;
     box-sizing: border-box;
     background-color: #333;
     border-bottom: 1px solid #ccc;
 
-    .message {
-        width: 300px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        color: #99CC99;
+        .folder {
+            margin-left: 40px;
+            cursor: pointer;
+            color: #fff;
+            line-height: 16px;
 
-        .info {
-            color: #eee;
+            img {
+                width: 34px;
+                height: 34px;
+            }
         }
 
-        .error {
-            color: #FF6347;
-        }
-
-        .success {
+        .message {
+            width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             color: #99CC99;
+
+            .info {
+                color: #eee;
+            }
+
+            .error {
+                color: #FF6347;
+            }
+
+            .success {
+                color: #99CC99;
+            }
         }
-    }
 }
