@@ -9,10 +9,17 @@ import {
   CountTextIcon,
   FolderIcon,
   JsonFormatIcon,
+  Md5Icon,
   ScriptIcon,
 } from "../../../public/icons";
 
-const icons = [CountTextIcon, FolderIcon, JsonFormatIcon, ColorTransIcon];
+const icons = [
+  CountTextIcon,
+  FolderIcon,
+  JsonFormatIcon,
+  ColorTransIcon,
+  Md5Icon,
+];
 
 const renderTabContent = (component?: React.FunctionComponent<any>) => {
   if (component) {
@@ -26,18 +33,6 @@ type SearchListProps = {
   close: () => void;
   onChange: (func: Function) => void;
 };
-
-// const parseFileContent = (content: string) => {
-//   // 解析文件内容,提取 main 函数
-//   const funcRegex = /const\s+(\w+)\s*=\s*\((.*?)\)\s*=>\s*\{([\s\S]*?)\}/g;
-//   // const funcRegex = /\/\*\*\n \{(.*?)\n \*\*\/\n\n(.*)/s;
-//   const funcMatch = content.match(funcRegex);
-//   if (funcMatch) {
-//     return funcMatch[0].trim().replace("const main = ", "");
-//   } else {
-//     throw new Error("Failed to parse file content");
-//   }
-// };
 
 const SearchList = (props: SearchListProps) => {
   const { value = [], close, onChange } = props;
@@ -92,23 +87,6 @@ const SearchList = (props: SearchListProps) => {
     close();
   });
 
-  const getComments = (content: string) => {
-    let pattern = /\/\*\*(.*?)\*(.*?)\//s; // 使用 s 标志使点号（.）能够匹配包括换行符在内的所有字符
-
-    let match = content.match(pattern);
-    if (match) {
-      let jsonString = match[1].trim();
-      try {
-        // 解析 JSON
-        return eval("(" + jsonString + ")");
-      } catch (error) {
-        console.error("JSON 解析错误");
-      }
-    } else {
-      console.log("未找到匹配的注释块");
-    }
-  };
-
   const run = async (val: { fileName: string; type: "customize" | "base" }) => {
     const scriptFileContent = await window.ipcRenderer.invoke(
       GET_SCRIPT_CONTENT,
@@ -117,12 +95,8 @@ const SearchList = (props: SearchListProps) => {
         type: val.type,
       }
     );
-    console.log(getComments(scriptFileContent));
     let mainFunction: Function = () => {};
     eval(`${scriptFileContent}; mainFunction = main;`);
-    // 不解析了
-    // const main = parseFileContent(scriptFileContent);
-    // const func = eval(main);
     onChange(mainFunction);
     close();
   };

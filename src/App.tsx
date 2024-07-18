@@ -30,7 +30,7 @@ const extractMultiLineComments = (content: string) => {
   if (match) {
     let jsonString = match[1].trim();
     try {
-      // 解析 JSON
+      // 解析 {} 要加括号
       return eval("(" + jsonString + ")");
     } catch (error) {
       console.error("JSON 解析错误");
@@ -38,15 +38,6 @@ const extractMultiLineComments = (content: string) => {
   } else {
     console.log("未找到匹配的注释块");
   }
-  // const commentsRegex = /\/\*\*([\s\S]*?)\**\//g;
-  // let match = null;
-  // const comments = [];
-  //
-  // while ((match = commentsRegex.exec(content))) {
-  //   comments.push(match[1].trim());
-  // }
-  // // return comments[0]
-  // return eval("(" + comments[0] + ")");
 };
 
 let editor: any;
@@ -71,7 +62,7 @@ function App() {
         res
       );
     }
-    const scriptFilePromises = scriptFiles.map(async (fileName) => {
+    const scriptFilePromises = scriptFiles.map(async (fileName, index) => {
       const scriptFileContent = await window.ipcRenderer.invoke(
         GET_SCRIPT_CONTENT,
         {
@@ -82,14 +73,10 @@ function App() {
       if (scriptFileContent) {
         try {
           const annotate = extractMultiLineComments(scriptFileContent);
-          if (
-            annotate &&
-            annotate.name &&
-            annotate.description &&
-            annotate.id
-          ) {
+          if (annotate && annotate.name && annotate.description) {
             annotate.type = "base";
             annotate.fileName = fileName;
+            annotate.id = "base" + index;
             return annotate;
           }
         } catch (e) {}
@@ -98,7 +85,7 @@ function App() {
     });
 
     const customizeScriptFilePromises = customizeScriptFiles.map(
-      async (fileName) => {
+      async (fileName, index) => {
         const scriptFileContent = await window.ipcRenderer.invoke(
           GET_SCRIPT_CONTENT,
           {
@@ -109,14 +96,10 @@ function App() {
         if (scriptFileContent) {
           try {
             const annotate = extractMultiLineComments(scriptFileContent);
-            if (
-              annotate &&
-              annotate.name &&
-              annotate.description &&
-              annotate.id
-            ) {
+            if (annotate && annotate.name && annotate.description) {
               annotate.type = "customize";
               annotate.fileName = fileName;
+              annotate.id = "customize" + index;
               return annotate;
             }
           } catch (e) {}

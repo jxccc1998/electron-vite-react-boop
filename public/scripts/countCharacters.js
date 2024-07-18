@@ -7,12 +7,12 @@
  }
  **/
 
-const lodash = myRequire('lodash.min.js');
+const lodash = myRequire("lodash.min.js");
 new Function(lodash)();
 
 const main = (state) => {
-    return {
-        type: 'SUCCESS',
-        content: `共计 ${_.size(state)} 个字符`,
-    }
-}
+  return {
+    type: "SUCCESS",
+    content: `共计 ${_.size(state)} 个字符`,
+  };
+};
