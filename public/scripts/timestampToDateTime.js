@@ -7,8 +7,8 @@
  }
  **/
 
-const dayjs = myRequire('dayjs.min.js')
-const dayjsFunc = new Function(dayjs + ' return dayjs;')();
-export const main = (timestamp) => {
-    return dayjsFunc(parseInt(timestamp)).format('YYYY-MM-DD HH:mm:ss')
-}
+const dayjs = myRequire("dayjs.min.js");
+const dayjsFunc = new Function(dayjs + " return dayjs;")();
+const main = (timestamp) => {
+  return dayjsFunc(parseInt(timestamp)).format("YYYY-MM-DD HH:mm:ss");
+};

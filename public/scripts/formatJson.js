@@ -8,5 +8,9 @@
  **/
 
 const main = (state) => {
-    return JSON.stringify(JSON.parse(state), null, 2)
-}
+  try {
+    return JSON.stringify(JSON.parse(state), null, 2);
+  } catch {
+    return { type: "ERROR", content: "JSON不合法" };
+  }
+};
