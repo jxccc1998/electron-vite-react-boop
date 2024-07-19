@@ -1,9 +1,8 @@
 /**
  {
- "id":313,
- "name":"Hex to RGB",
- "description":"Convert color in hexadecimal to RGB.",
- "tag":"ColorTrans"
+    "name":"Hex to RGB",
+    "description":"Convert color in hexadecimal to RGB.",
+    "tag":"ColorTrans"
  }
  **/
 

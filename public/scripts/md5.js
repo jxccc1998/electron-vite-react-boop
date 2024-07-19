@@ -1,13 +1,10 @@
 /**
  {
- "name":"MD5 Checksum",
- "description":"十六进制计算文本的校验和",
- "tag":"Md5"
+    "name":"MD5 Checksum",
+    "description":"十六进制计算文本的校验和",
+    "tag":"Md5"
  }
  **/
-
-const hashes = myRequire("hashes.js");
-new Function(hashes)();
 
 const main = (state) => {
   const MD5 = new Hashes.MD5();

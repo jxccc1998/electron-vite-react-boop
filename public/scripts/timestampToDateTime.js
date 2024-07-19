@@ -1,14 +1,11 @@
 /**
  {
- "id":"5",
- "tag":"CountText",
- "name":"Count Characters",
- "description":"统计文本中的字符数",
+  "tag":"CountText",
+  "name":"Timestamp To Datetime",
+  "description":"格式化时间戳",
  }
  **/
 
-const dayjs = myRequire("dayjs.min.js");
-const dayjsFunc = new Function(dayjs + " return dayjs;")();
 const main = (timestamp) => {
-  return dayjsFunc(parseInt(timestamp)).format("YYYY-MM-DD HH:mm:ss");
+  return dayjs(parseInt(timestamp)).format("YYYY-MM-DD HH:mm:ss");
 };

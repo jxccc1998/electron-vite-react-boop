@@ -1,6 +1,5 @@
 /**
   {
-    "id":"4",
     "tag":"ColorTrans",
     "name":"Rgb to hex",
     "description":"转换颜色",

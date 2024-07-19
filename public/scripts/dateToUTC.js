@@ -1,27 +1,26 @@
 /**
  {
- "id":"2",
- "tag":"TransTime",
- "name":"Date to utc",
- "description":"时间转换",
+    "tag":"TransTime",
+    "name":"Date to utc",
+    "description":"时间转换",
  }
  **/
 export const main = (state) => {
-    let string = state
+  let string = state;
 
-    let parsedDate = Date.parse(string)
+  let parsedDate = Date.parse(string);
 
-    if (isNaN(parsedDate)) {
-        parsedDate = new Date(parseInt(string * 1000))
-    } else {
-        parsedDate = new Date(parsedDate)
-    }
+  if (isNaN(parsedDate)) {
+    parsedDate = new Date(parseInt(string * 1000));
+  } else {
+    parsedDate = new Date(parsedDate);
+  }
 
-    let out = parsedDate.toUTCString()
+  let out = parsedDate.toUTCString();
 
-    if (out === "Invalid Date") {
-        return { type: 'ERROR', content: "无效的日期格式"}
-    }
+  if (out === "Invalid Date") {
+    return { type: "ERROR", content: "无效的日期格式" };
+  }
 
-    return out
-}
+  return out;
+};

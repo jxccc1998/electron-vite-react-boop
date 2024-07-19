@@ -1,8 +1,8 @@
 {
-  "name": "electron-vite-react",
+  "name": "electron-boop",
   "version": "0.0.1",
   "main": "dist-electron/main/index.js",
-  "description": "Electron Vite React boilerplate.",
+  "description": "Electron Vite React Boop.",
   "author": "jxccc1998 <970047273@qq.com>",
   "debug": {
     "env": {
