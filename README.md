@@ -31,7 +31,7 @@ Use
 ---
 Open it, paste some text, run some scripts, optionally copy the text out.
 
-To run scripts, simply open the script picker by pressing ⌘X or in the top menu under Scripts > Open Picker.
+To run scripts, simply open the script picker by pressing ctrl+X or in the top menu under Scripts > Open Picker.
 
 Make scripts
 ---
