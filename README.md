@@ -2,6 +2,7 @@ Electron-vite-react-boop
 ---
 
 ### This is an offline script executor that imitates boop
+![electron-boop](/public/electron-boop.gif)
 
 ## Start
 Install `node_modules`:
@@ -68,4 +69,4 @@ return {
 
 Feature
 ---
-Multi label switching is a worthwhile thing to achieve
+Multi label switching is a worthwhile thing to achieve(It will be realized when there is time) -.-
