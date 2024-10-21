@@ -13,6 +13,7 @@ import {
   GET_SCRIPT_CONTENT,
   GET_SCRIPT_FILES,
 } from "../constant/event";
+import { browserRuntimeVM } from "@/utils/browserRuntimeVM";
 
 export type funcItemType = {
   type: "base" | "customize";
@@ -130,6 +131,7 @@ function App() {
     loadScripts();
   }, []);
 
+  // 判断mac/win
   useKeyPress(["ctrl.x"], () => {
     setOpen(true);
   });
@@ -159,7 +161,15 @@ function App() {
     return res;
   };
 
-  const changeText = (func: Function) => {
+  const funcExecute = (func: string, state: string) : any => {
+    return browserRuntimeVM?.execute?.(func, {
+      _: window._,
+      dayjs: (window as any).dayjs,
+      Hashes: (window as any).Hashes,
+      state: state, });
+  }
+
+  const changeText = (func: string) => {
     const selection = editor.getSelection();
     const ranges = selection.getAllRanges();
     const selectedTexts = ranges.map((range: string) =>
@@ -169,27 +179,26 @@ function App() {
     if (selectedTexts.length > 1 && selectedTexts[0] !== "") {
       // 多光标情况
       ranges.forEach((range: string, i: number) => {
-        const res = afterFunc(func(selectedTexts[i]));
+        const res = afterFunc(funcExecute(func, selectedTexts[i]));
         if (res === "ERROR" || res === "INFO" || res === "SUCCESS") {
           return;
         }
         editor.session.replace(range, res);
       });
     } else if (selectedTexts.length === 1 && selectedTexts[0] !== "") {
-      const res = afterFunc(func(selectedTexts[0]));
+      const res = afterFunc(funcExecute(func, selectedTexts[0]));
       if (res === "ERROR" || res === "INFO" || res === "SUCCESS") {
         return;
       }
       const range = selection.getRange();
       editor.session.replace(range, res);
     } else if (selectedTexts[0] === "") {
-      const res = afterFunc(func(editor.getValue()));
+      const res = afterFunc(funcExecute(func, editor.getValue()));
       if (res === "ERROR" || res === "INFO" || res === "SUCCESS") {
         return;
       }
       editor.setValue(res);
     }
-    console.log("选中的文本数组: ", selectedTexts);
   };
 
   return (

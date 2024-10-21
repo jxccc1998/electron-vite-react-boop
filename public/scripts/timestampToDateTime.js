@@ -6,6 +6,6 @@
  }
  **/
 
-const main = (timestamp) => {
-  return dayjs(parseInt(timestamp)).format("YYYY-MM-DD HH:mm:ss");
-};
+function main() {
+  return dayjs(parseInt(state)).format("YYYY-MM-DD HH:mm:ss");
+}

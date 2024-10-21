@@ -5,7 +5,7 @@
     "description":"时间转换",
  }
  **/
-export const main = (state) => {
+function main (){
   let string = state;
 
   let parsedDate = Date.parse(string);
@@ -23,4 +23,4 @@ export const main = (state) => {
   }
 
   return out;
-};
+}

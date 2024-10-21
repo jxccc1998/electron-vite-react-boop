@@ -31,7 +31,7 @@ const renderTabContent = (component?: React.FunctionComponent<any>) => {
 type SearchListProps = {
   value: funcItemType[];
   close: () => void;
-  onChange: (func: Function) => void;
+  onChange: (func: string) => void;
 };
 
 const SearchList = (props: SearchListProps) => {
@@ -95,9 +95,10 @@ const SearchList = (props: SearchListProps) => {
         type: val.type,
       }
     );
-    let mainFunction: Function = () => {};
-    eval(`${scriptFileContent}; mainFunction = main;`);
-    onChange(mainFunction);
+    // 原方案传入带执行函数
+    // let mainFunction: Function = () => {};
+    // eval(`${scriptFileContent}; mainFunction = main;`);
+    onChange(scriptFileContent);
     close();
   };
 

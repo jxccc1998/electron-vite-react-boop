@@ -6,10 +6,10 @@
 }
  **/
 
-const main = (state) => {
+function main () {
   try {
     return JSON.stringify(JSON.parse(state), null, 2);
   } catch {
     return { type: "ERROR", content: "JSON不合法" };
   }
-};
+}

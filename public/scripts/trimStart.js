@@ -6,6 +6,6 @@
   }
  **/
 
-const main = (state) => {
+function main () {
   return state.trimStart();
-};
+}

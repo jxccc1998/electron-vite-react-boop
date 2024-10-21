@@ -6,7 +6,7 @@
  }
  **/
 
-const main = (state) => {
+function main () {
   const MD5 = new Hashes.MD5();
   return MD5.hex(state);
-};
+}

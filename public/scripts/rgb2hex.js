@@ -6,7 +6,7 @@
   }
 **/
 
-const main = (state) => {
+function main() {
   const rgb = state;
   const rgbArray = rgb.includes(",") ? rgb.split(",") : rgb.split(" ");
 
@@ -23,4 +23,4 @@ const main = (state) => {
     return { type: "ERROR", content: error.message };
   }
   return hex.toUpperCase();
-};
+}

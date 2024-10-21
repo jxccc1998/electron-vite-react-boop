@@ -6,7 +6,7 @@
  }
  **/
 
-const main = (state) => {
+function main () {
   const R = hexToR(state);
   const G = hexToG(state);
   const B = hexToB(state);
@@ -16,7 +16,7 @@ const main = (state) => {
     .concat(G.toString())
     .concat(",")
     .concat(B.toString());
-};
+}
 
 function hexToR(h) {
   return parseInt(cutHex(h).substring(0, 2), 16);
